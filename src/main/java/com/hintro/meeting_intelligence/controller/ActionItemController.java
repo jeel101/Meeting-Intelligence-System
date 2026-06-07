@@ -6,6 +6,7 @@ import com.hintro.meeting_intelligence.dto.response.ApiResponseDto;
 import com.hintro.meeting_intelligence.entity.ActionItemStatus;
 import com.hintro.meeting_intelligence.logging.TraceFilter;
 import com.hintro.meeting_intelligence.service.ActionItemService;
+import com.hintro.meeting_intelligence.service.ReminderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequestMapping("api/v1/action-items")
 public class ActionItemController {
     private final ActionItemService actionItemService;
+    private final ReminderService reminderService;
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<ApiResponseDto<ActionItemResponseDto>> updateStatus(
@@ -51,4 +53,10 @@ public class ActionItemController {
                 )
         );
     }
+
+//    @PostMapping("/trigger-reminders")public ResponseEntity<String> triggerReminders() {
+//        reminderService.processOverdueItems();
+//        return ResponseEntity.ok("Reminders sent");
+//    }
+
 }
