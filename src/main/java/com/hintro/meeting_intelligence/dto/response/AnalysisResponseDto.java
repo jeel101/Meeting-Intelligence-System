@@ -1,5 +1,6 @@
 package com.hintro.meeting_intelligence.dto.response;
 
+import com.hintro.meeting_intelligence.dto.ActionItemDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

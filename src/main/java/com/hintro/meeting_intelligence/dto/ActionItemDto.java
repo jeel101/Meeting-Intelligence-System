@@ -1,14 +1,14 @@
-package com.hintro.meeting_intelligence.dto.response;
+package com.hintro.meeting_intelligence.dto;
 
+import com.hintro.meeting_intelligence.dto.response.CitationDto;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ActionItemDto {
@@ -16,7 +16,7 @@ public class ActionItemDto {
 
     private String assignee;
 
-    private String dueDate;
+    private LocalDate dueDate;
 
     private List<CitationDto> citations;
 }
