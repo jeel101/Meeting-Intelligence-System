@@ -6,9 +6,11 @@ import com.hintro.meeting_intelligence.dto.response.MeetingResponseDto;
 import com.hintro.meeting_intelligence.dto.response.ApiResponseDto;
 import com.hintro.meeting_intelligence.logging.TraceFilter;
 import com.hintro.meeting_intelligence.service.MeetingService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,13 +41,16 @@ public class MeetingController {
                 )
         );
     }
-    @GetMapping("get-all")
-    public ResponseEntity<ApiResponseDto<List<MeetingResponseDto>>>getAllMeetings() {
+    @GetMapping
+    @Operation(summary = "List all meetings — paginated")
+    public ResponseEntity<ApiResponseDto<Page<MeetingResponseDto>>> getAllMeetings(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<MeetingResponseDto> meetings = meetingService.getAllMeetings(page, size);
 
         return ResponseEntity.ok(
-                ApiResponseDto.success(meetingService.getAllMeetings(),
-                        MDC.get(TraceFilter.TRACE_ID_MDC_KEY)
-                )
+                ApiResponseDto.success(meetings, MDC.get(TraceFilter.TRACE_ID_MDC_KEY))
         );
     }
 }

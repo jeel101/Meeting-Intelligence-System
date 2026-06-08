@@ -59,7 +59,6 @@ public class AnalysisServiceImpl implements AnalysisService {
                                         + t.getText())
                         .collect(Collectors.joining("\n"));
 
-        //build prompt
         String prompt = """
             You are a meeting analysis assistant.  
             Today's date is %s.

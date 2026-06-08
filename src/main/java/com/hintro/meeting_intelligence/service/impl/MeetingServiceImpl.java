@@ -16,6 +16,10 @@ import com.hintro.meeting_intelligence.repository.TranscriptRepository;
 import com.hintro.meeting_intelligence.repository.UserRepository;
 import com.hintro.meeting_intelligence.service.MeetingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -74,12 +78,18 @@ public class MeetingServiceImpl implements MeetingService {
         return mapToDetailDto(meeting);
     }
 
+//    @Override
+//    public List<MeetingResponseDto> getAllMeetings() {
+//        return meetingRepository.findAll()
+//                .stream()
+//                .map(this::mapToDto)
+//                .toList();
+//    }
+
     @Override
-    public List<MeetingResponseDto> getAllMeetings() {
-        return meetingRepository.findAll()
-                .stream()
-                .map(this::mapToDto)
-                .toList();
+    public Page<MeetingResponseDto> getAllMeetings(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return meetingRepository.findAll(pageable).map(this::mapToDto);
     }
 
     private MeetingResponseDto mapToDto(Meeting meeting) {
