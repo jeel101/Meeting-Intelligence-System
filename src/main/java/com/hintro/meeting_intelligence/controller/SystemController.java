@@ -23,8 +23,8 @@ public class SystemController {
         return Map.of(
                 "candidateName", "Jeel Shah",
                 "email", "jeelshah408@gmail.com",
-                "repositoryUrl", "https://github.com/YOUR_REPO",    // ← update before submitting
-                "deployedUrl", "https://YOUR_APP.onrender.com",   // ← update before submitting
+                "repositoryUrl", "https://github.com/jeel101/Meeting-Intelligence-System",
+                "deployedUrl", "NA",
                 "externalIntegration", "Telegram Bot API",
                 "features", List.of(
                         "JWT Authentication",
