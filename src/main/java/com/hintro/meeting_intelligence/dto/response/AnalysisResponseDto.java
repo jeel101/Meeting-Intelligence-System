@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnalysisResponseDto {
-    private String summary;
+    private List<String> summary;
 
     private List<String> decisions;
 

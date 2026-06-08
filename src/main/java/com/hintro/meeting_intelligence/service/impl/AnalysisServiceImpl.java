@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,6 +45,7 @@ public class AnalysisServiceImpl implements AnalysisService {
 
     @Override
     public AnalysisResponseDto analyzeMeeting(Long meetingId) {
+        String today = LocalDate.now().toString();
         Meeting meeting = meetingRepository.findById(meetingId)
                         .orElseThrow(() ->AppException.notFound("Meeting not found"));
 
@@ -60,10 +62,11 @@ public class AnalysisServiceImpl implements AnalysisService {
         //build prompt
         String prompt = """
             You are a meeting analysis assistant.  
+            Today's date is %s.
             Extract insights STRICTLY from the transcript provided.    
-            Return ONLY valid JSON — no explanation, no markdown, no preamble.         
+            Return ONLY VALID JSON — no explanation, no markdown, no preamble.         
             {
-              "summary":"...",
+              "summary":["one sentence point 1", "one sentence point 2"],
               "decisions":["..."],
               "followUps":["..."],
               "actionItems":[
@@ -87,10 +90,13 @@ public class AnalysisServiceImpl implements AnalysisService {
             6. Do not hallucinate.
             7. Every insight MUST have at least one citation with exact timestamp from transcript  
             8. If something is unclear, omit it — do not guess    
-            9. If no assignee is explicitly mentioned in the transcript, return assignee as null      
+            9. If no assignee is explicitly mentioned in the transcript, return assignee as null
+            10. If a due date is mentioned (e.g. "by Monday", "15th June", "end of week"), 
+            convert it to YYYY-MM-DD format using today's date as reference. If no due date is mentioned, return null.
+            11. summary is ALWAYS required — every transcript has something worth summarizing.
+            Write at least 1-3 concise bullet points describing what was discussed, even if no decisions or action items were made      
             Transcript:            
-            """ + transcriptText;
-        log.info(prompt);
+            """.formatted(today) + transcriptText;
 
         GroqRequestDto request = GroqRequestDto.builder()
                         .model("llama-3.3-70b-versatile")
@@ -119,6 +125,10 @@ public class AnalysisServiceImpl implements AnalysisService {
 
 
             System.out.println(content);
+
+            content = content.replaceAll("(?s)```json\\s*", "");
+            content = content.replaceAll("(?s)```\\s*", "");
+            content = content.trim();
 
             AnalysisResponseDto analysis = objectMapper.readValue(content, AnalysisResponseDto.class);
 
@@ -152,6 +162,11 @@ public class AnalysisServiceImpl implements AnalysisService {
             actionItem.setStatus( ActionItemStatus.PENDING);
             actionItem.setMeeting(meeting);
             actionItem.setCitationsJson(objectMapper.writeValueAsString(actionItemDto.getCitations()));
+
+            // ← ADD HERE
+            if (actionItemDto.getDueDate() != null) {
+                actionItem.setDueDate(actionItemDto.getDueDate());
+            }
 
             actionItemRepository.save(actionItem);
         }

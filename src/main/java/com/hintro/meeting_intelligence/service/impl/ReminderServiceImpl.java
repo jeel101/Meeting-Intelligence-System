@@ -25,36 +25,36 @@ public class ReminderServiceImpl implements ReminderService {
                 .findByStatusNotAndDueDateBefore(ActionItemStatus.COMPLETED, LocalDate.now());
 
         for(ActionItem item : overdueItems) {
-                boolean alreadySent = reminderLogRepository
-                        .existsByActionItemIdAndStatus(item.getId(), ReminderStatus.SENT);
+            boolean alreadySent = reminderLogRepository
+                    .existsByActionItemIdAndStatus(item.getId(), ReminderStatus.SENT);
 
-                if (alreadySent) {
-                    continue;
-                }
+            if (alreadySent) {
+                continue;
+            }
 
-            String message = "Reminder\n\n"
-                    + "Task: " + item.getTask()
-                    + "\nAssignee: "
-                    + item.getAssignee()
-                    + "\nDue Date: "
-                    + item.getDueDate();
+            String message = "Reminder: " + item.getTask()
+                            + "\n\nAssigned To: " + item.getAssignee()
+                            + "\n\nDue Date: " + item.getDueDate();
 
-                    ReminderLog reminderLog = new ReminderLog();
-                        reminderLog.setActionItem(item);
-                        reminderLog.setSentAt(LocalDateTime.now());
-                        reminderLog.setMessage(message);
-                        reminderLog.setChannel(ReminderChannel.TELEGRAM);
+            ReminderLog reminderLog = new ReminderLog();
 
-                        try {
-                            String response = telegramService.sendReminder(message);
-                            reminderLog.setStatus(ReminderStatus.SENT);
-                            reminderLog.setResponse(response);
-                    } catch (Exception e) {
-                        reminderLog.setStatus(ReminderStatus.FAILED);
-                        reminderLog.setResponse(e.getMessage());
-                    }
+            reminderLog.setActionItem(item);
+            reminderLog.setSentAt(LocalDateTime.now());
+            reminderLog.setChannel(ReminderChannel.TELEGRAM);
+            reminderLog.setReminder(item.getTask());
+            reminderLog.setAssignee(item.getAssignee());
+            reminderLog.setDueDate(item.getDueDate());
 
-                    reminderLogRepository.save(reminderLog);
-                }
+            try {
+                telegramService.sendReminder(message);
+                reminderLog.setStatus( ReminderStatus.SENT);
+            } catch (Exception e) {
+                reminderLog.setStatus(ReminderStatus.FAILED);
+            }
+
+            reminderLogRepository.save(
+                    reminderLog
+            );
+        }
     }
 }

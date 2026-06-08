@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,17 +20,17 @@ public class ReminderLog extends BaseEntity{
     @JoinColumn(name = "action_item_id")
     private ActionItem actionItem;
 
-    @Column(columnDefinition = "TEXT")
-    private String message;
-
     @Enumerated(EnumType.STRING)
     private ReminderChannel channel;
 
     @Enumerated(EnumType.STRING)
     private ReminderStatus status;
 
-    @Column(columnDefinition = "TEXT")
-    private String response;
+    private String reminder;
+
+    private String assignee;
+
+    private LocalDate dueDate;
 
     private LocalDateTime sentAt;
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("a[i/v1")
+@RequestMapping("api/v1")
 public class SystemController {
     @GetMapping("/health")
     @Operation(summary = "Health check — returns UP if service is running")
