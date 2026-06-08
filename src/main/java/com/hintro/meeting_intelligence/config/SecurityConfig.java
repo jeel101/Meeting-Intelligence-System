@@ -24,6 +24,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
@@ -35,13 +37,15 @@ public class SecurityConfig {
                                         "/api/v1/auth/**",
                                            "/swagger-ui/**",
                                         "/swagger-ui.html",
+                                        "/swagger-ui/index.html",
                                         "/v3/api-docs/**",
+                                        "/api-docs/**",
                                         "/health",
                                         "/evaluation"
                                 )
                                 .permitAll()
                                 .anyRequest()
-                                .permitAll()
+                                .authenticated()
                 );
 
         http.addFilterBefore(
