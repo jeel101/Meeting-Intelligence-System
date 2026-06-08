@@ -1,6 +1,7 @@
 package com.hintro.meeting_intelligence.dto.response;
 
 import com.hintro.meeting_intelligence.dto.ActionItemDto;
+import com.hintro.meeting_intelligence.dto.InsightDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnalysisResponseDto {
-    private List<String> summary;
+    private List<InsightDto> summary;
 
-    private List<String> decisions;
+    private List<InsightDto> decisions;
 
-    private List<String> followUps;
+    private List<InsightDto> followUps;
 
     private List<ActionItemDto> actionItems;
 }

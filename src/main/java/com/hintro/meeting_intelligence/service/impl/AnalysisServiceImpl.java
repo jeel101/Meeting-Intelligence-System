@@ -66,21 +66,49 @@ public class AnalysisServiceImpl implements AnalysisService {
             Extract insights STRICTLY from the transcript provided.    
             Return ONLY VALID JSON — no explanation, no markdown, no preamble.         
             {
-              "summary":["one sentence point 1", "one sentence point 2"],
-              "decisions":["..."],
-              "followUps":["..."],
-              "actionItems":[
-                 {
-                    "task":"...",
-                    "assignee":"...",
-                    "citations":[
-                       {
-                         "timestamp":"00:10"
-                       }
+              "summary":[
+                      {
+                        "text":[],
+                        "citations":[
+                          {
+                            "timestamp":"00:10"
+                          }
+                        ]
+                      }
+                    ],
+                    "decisions":[
+                      {
+                        "text":[],
+                        "citations":[
+                          {
+                            "timestamp":"00:10"
+                          }
+                        ]
+                      }
+                    ],
+                    "followUps":[
+                      {
+                        "text": [],
+                        "citations":[
+                          {
+                            "timestamp":"00:10"
+                          }
+                        ]
+                      }
+                    ],
+                      "actionItems":[
+                         {
+                            "task":"...",
+                            "assignee":"...",
+                            "dueDate":"2026-06-15",
+                            "citations":[
+                               {
+                                 "timestamp":"00:10"
+                               }
+                            ]
+                         }
                     ]
-                 }
-              ]
-            } 
+             } 
             Rules:
             1. NEVER invent attendees not mentioned in the transcript
             2. NEVER invent action items not explicitly stated
@@ -94,7 +122,9 @@ public class AnalysisServiceImpl implements AnalysisService {
             10. If a due date is mentioned (e.g. "by Monday", "15th June", "end of week"), 
             convert it to YYYY-MM-DD format using today's date as reference. If no due date is mentioned, return null.
             11. summary is ALWAYS required — every transcript has something worth summarizing.
-            Write at least 1-3 concise bullet points describing what was discussed, even if no decisions or action items were made      
+            Write at least 1-3 concise bullet points describing what was discussed, even if no decisions or action items were made
+            12. Every summary, decision, follow-up and action item MUST contain at least one citation.
+            13. Do not generate any insight without a citation.      
             Transcript:            
             """.formatted(today) + transcriptText;
 
