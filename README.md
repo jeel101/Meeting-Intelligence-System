@@ -2,7 +2,6 @@
 
 AI-powered backend service that helps users manage meetings, extract actionable insights from transcripts, track action items, and send automated reminders.
 
-Built for the **Hintro Backend/Fullstack Engineering Internship Assignment**.
 
 ---
 
